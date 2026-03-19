@@ -9,6 +9,7 @@
 # This file contains code derived from unitree_rl_gym Project (BSD-3-Clause license)
 # with modifications by Legged Lab Project (BSD-3-Clause license).
 
+import os
 import sys
 import time
 from threading import Lock
@@ -152,6 +153,11 @@ class Controller:
 
     def wait_for_start(self):
         print("Enter zero torque state.")
+        # AUTO_START: skip waiting for button if set
+        if os.environ.get("AUTO_START"):
+            print("AUTO_START enabled, skipping button wait (3s delay)...")
+            time.sleep(3.0)
+            return
         print("Waiting for the start signal to move to default pos...")
         while self.remote_controller.button[KeyMap.start] != 1:
             if self.remote_controller.button[KeyMap.select] == 1:
@@ -187,6 +193,11 @@ class Controller:
 
     def wait_for_control(self):
         print("Enter default pos state.")
+        # AUTO_START: skip waiting for button if set
+        if os.environ.get("AUTO_START"):
+            print("AUTO_START enabled, starting control (2s delay)...")
+            time.sleep(2.0)
+            return
         print("Waiting for the Button A signal to Start Control...")
         while self.remote_controller.button[KeyMap.A] != 1:
             if self.remote_controller.button[KeyMap.select] == 1:
